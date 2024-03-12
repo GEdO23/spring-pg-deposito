@@ -20,7 +20,9 @@ public class SpringPgDepositoApplication {
                     <h1 style="font-family: sans-serif;text-align: center;">Seja muito bem vindo a Holding Benezinho</h1>
                     <nav>
                         <ul>
-                            <li><a href="/produtos">Produtos</a></li>
+                            <li><a href="/deposito">Depositos</a></li>
+                            <li><a href="/endereco">Endereços</a></li>
+                            <li><a href="/produto">Produtos</a></li>
                         </ul>
                     </nav>
                 </main>
