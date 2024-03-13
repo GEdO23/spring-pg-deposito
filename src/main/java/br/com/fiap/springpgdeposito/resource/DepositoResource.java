@@ -2,6 +2,7 @@ package br.com.fiap.springpgdeposito.resource;
 
 import br.com.fiap.springpgdeposito.entity.Deposito;
 import br.com.fiap.springpgdeposito.repository.DepositoRepository;
+import br.com.fiap.springpgdeposito.repository.EnderecoRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,17 +16,20 @@ import java.util.Objects;
 public class DepositoResource {
 
     @Autowired
-    private DepositoRepository repository;
+    private DepositoRepository depositoRepository;
+
+    @Autowired
+    private EnderecoRepository enderecoRepository;
 
     @GetMapping
     public List<Deposito> findAll() {
-        return repository.findAll();
+        return depositoRepository.findAll();
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Deposito> findById(@PathVariable(name = "id") Long id) {
 
-        Deposito deposito = repository.findById( id ).orElse( null );
+        Deposito deposito = depositoRepository.findById( id ).orElse( null );
 
         if (Objects.isNull( deposito )) {
             return ResponseEntity.notFound().build();
@@ -39,7 +43,17 @@ public class DepositoResource {
     @PostMapping
     @Transactional
     public ResponseEntity<Deposito> persist(@RequestBody Deposito deposito) {
-        Deposito saved = repository.save( deposito );
+
+        if (Objects.nonNull( deposito.getEndereco().getId() )) {
+
+            var endereco = enderecoRepository.findById(deposito.getEndereco().getId());
+
+            if (endereco.isEmpty()) return ResponseEntity.badRequest().build();
+
+            deposito.setEndereco(endereco.get());
+        }
+
+        Deposito saved = depositoRepository.save( deposito );
         return ResponseEntity.ok( saved );
     }
 }
