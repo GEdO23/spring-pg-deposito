@@ -27,14 +27,10 @@ public class ProdutoResource {
 
         Produto produto = repository.findById( id ).orElse( null );
 
-        if (Objects.isNull( produto )) {
-            return ResponseEntity.notFound().build();
-        }
+        if (Objects.isNull( produto )) return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok( produto );
-
     }
-
 
     @PostMapping
     @Transactional

@@ -27,9 +27,7 @@ public class EnderecoResource {
 
         Endereco endereco = repository.findById( id ).orElse( null );
 
-        if (Objects.isNull( endereco )) {
-            return ResponseEntity.notFound().build();
-        }
+        if (Objects.isNull( endereco )) return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok( endereco );
 
