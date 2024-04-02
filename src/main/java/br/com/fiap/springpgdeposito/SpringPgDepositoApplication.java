@@ -5,6 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+
 @RestController
 @SpringBootApplication
 public class SpringPgDepositoApplication {
@@ -15,6 +17,9 @@ public class SpringPgDepositoApplication {
 
     @GetMapping(value = "/")
     public String index() {
+
+        ArrayList<String> linkList = new ArrayList<>();
+
         return """
                 <main style="width: 100%; padding-top: 90px;font-family: sans-serif;">
                     <h1 style="text-align: center;">Seja muito bem vindo a Holding Benezinho</h1>

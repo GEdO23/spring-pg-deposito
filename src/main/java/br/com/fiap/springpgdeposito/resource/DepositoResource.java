@@ -1,13 +1,16 @@
 package br.com.fiap.springpgdeposito.resource;
 
+import br.com.fiap.springpgdeposito.dto.request.DepositoRequest;
+import br.com.fiap.springpgdeposito.dto.response.DepositoResponse;
 import br.com.fiap.springpgdeposito.entity.Deposito;
-import br.com.fiap.springpgdeposito.repository.DepositoRepository;
-import br.com.fiap.springpgdeposito.repository.EnderecoRepository;
+import br.com.fiap.springpgdeposito.service.DepositoService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,44 +19,24 @@ import java.util.Objects;
 public class DepositoResource {
 
     @Autowired
-    private DepositoRepository depositoRepository;
-
-    @Autowired
-    private EnderecoRepository enderecoRepository;
+    private DepositoService service;
 
     @GetMapping
-    public List<Deposito> findAll() {
-        return depositoRepository.findAll();
+    public List<DepositoResponse> findAll() {
+        return service.findAll().
+                stream().
+                map(service::toResponse).
+                toList();
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Deposito> findById(@PathVariable(name = "id") Long id) {
-
-        Deposito deposito = depositoRepository.findById( id ).orElse( null );
-
-        if (Objects.isNull( deposito )) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok( deposito );
-
+    public DepositoResponse findById(@PathVariable(name = "id") Long id) {
+        return service.toResponse(service.findById( id ));
     }
 
-
-    @PostMapping
-    @Transactional
-    public ResponseEntity<Deposito> persist(@RequestBody Deposito deposito) {
-
-        if (Objects.nonNull( deposito.getEndereco().getId() )) {
-
-            var endereco = enderecoRepository.findById(deposito.getEndereco().getId());
-
-            if (endereco.isEmpty()) return ResponseEntity.badRequest().build();
-
-            deposito.setEndereco(endereco.get());
-        }
-
-        Deposito saved = depositoRepository.save( deposito );
-        return ResponseEntity.ok( saved );
-    }
+//    @PostMapping
+//    @Transactional
+//    public DepositoResponse persist(@RequestBody DepositoRequest request) {
+//
+//    }
 }
